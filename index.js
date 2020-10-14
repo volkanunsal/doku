@@ -17,7 +17,7 @@ Options:
 `);
     return;
   }
-  const browser = await puppeteer.launch({ headless: true });
+  const browser = await puppeteer.launch({ headless: false });
   fileName = fileName.endsWith('.pdf')
     ? fileName.replace('.pdf', '')
     : fileName;
@@ -73,14 +73,9 @@ Options:
             <main className='container'>
               <div className='row'>
                 <article className='col-lg-12'>
-                <zero-md
-                  no-shadow
-                  id="app"
-                >
-                  <script type="text/markdown" data-dedent>
-${entries.map((v) => fs.readFileSync(v, 'utf8'))}
-                  </script>
-                </zero-md>
+  ${entries.map(
+    (v) => `<zero-md no-shadow src="file://${process.cwd()}/${v}"></zero-md>`
+  )}
                 </article>
               </div>
             </main>
@@ -91,26 +86,26 @@ ${entries.map((v) => fs.readFileSync(v, 'utf8'))}
       { waitUntil: 'networkidle2' }
     );
 
-    await page.pdf({
-      path: `./${fileName}.pdf`,
-      headerTemplate: '<div></div>',
-      footerTemplate:
-        "<div style='width: 100%; text-align: right; font-size: 10px; color: #333; padding-right: 30px;'><span class='pageNumber'></span></div>",
-      displayHeaderFooter: true,
+    // await page.pdf({
+    //   path: `./${fileName}.pdf`,
+    //   headerTemplate: '<div></div>',
+    //   footerTemplate:
+    //     "<div style='width: 100%; text-align: right; font-size: 10px; color: #333; padding-right: 30px;'><span class='pageNumber'></span></div>",
+    //   displayHeaderFooter: true,
 
-      format: 'A4',
-      margin: {
-        bottom: 70,
-        left: 10,
-        right: 10,
-        top: 70,
-      },
-    });
+    //   format: 'A4',
+    //   margin: {
+    //     bottom: 70,
+    //     left: 10,
+    //     right: 10,
+    //     top: 70,
+    //   },
+    // });
   } catch (error) {
     console.log(error);
   }
   console.log('PDF file created:', fileName + '.pdf');
-  await browser.close();
+  // await browser.close();
 };
 
 module.exports.main = main;
