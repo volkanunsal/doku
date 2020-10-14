@@ -2,6 +2,14 @@
 
 Commandline tool to generate pdf from markdown.
 
+```
+       __      __        
+  ____/ /___  / /____  __
+ / __  / __ \/ //_/ / / /
+/ /_/ / /_/ / ,< / /_/ / 
+\__,_/\____/_/|_|\__,_/  
+                         
+```
 
 ## Installation
 
