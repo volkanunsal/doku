@@ -5,10 +5,10 @@ Commandline tool to generate pdf from markdown.
 
 ## Installation
 
-Currently only way to install it is by forking the repo and linking it.
+Currently only way to install it is by cloning the repo and linking the package.
 
 ```
-git clone https://github.com/volkanunsal/doku
+git clone git@github.com:volkanunsal/doku.git
 cd doku 
 npm link
 
