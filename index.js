@@ -5,12 +5,25 @@ const fg = require('fast-glob');
 const argv0 = require('minimist');
 
 const main = async () => {
-  const browser = await puppeteer.launch({ headless: false });
+  const browser = await puppeteer.launch({ headless: true });
   const argv = argv0(process.argv.slice(2));
-  let { path = '', fileName = 'file' } = argv;
+  let { path = '*.md', fileName = 'file', config = 'doku.json' } = argv;
+  fileName = fileName.endsWith('.pdf')
+    ? fileName.replace('.pdf', '')
+    : fileName;
 
   const page = await browser.newPage();
-  const entries = fg.sync([path + '/**/*.md']);
+
+  let entries = [];
+  if (config && fs.existsSync(config)) {
+    const configFile = JSON.parse(fs.readFileSync(config, 'utf8'));
+    entries = configFile.files;
+  } else if (path) {
+    // FIXME: glob only fetches a single entry.
+    entries = await fg([path]);
+  }
+
+  // FIXME: table of contents not showing up.
 
   try {
     await page.setContent(
@@ -55,7 +68,7 @@ const main = async () => {
                   id="app"
                 >
                   <script type="text/markdown" data-dedent>
-                  ${entries.map((v) => fs.readFileSync(v, 'utf8'))}
+${entries.map((v) => fs.readFileSync(v, 'utf8'))}
                   </script>
                 </zero-md>
                 </article>
@@ -67,6 +80,7 @@ const main = async () => {
     `,
       { waitUntil: 'networkidle2' }
     );
+
     await page.pdf({
       path: `./${fileName}.pdf`,
       headerTemplate: '<div></div>',
@@ -85,11 +99,11 @@ const main = async () => {
   } catch (error) {
     console.log(error);
   }
+  console.log('PDF file created:', fileName + '.pdf');
   await browser.close();
 };
 
 module.exports.main = main;
-
 if (require.main === module) {
   main();
 }
