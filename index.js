@@ -22,7 +22,7 @@ Options:
   }
   const fileServerUrl = 'http://localhost:9999/';
 
-  const browser = await puppeteer.launch({ headless: false });
+  const browser = await puppeteer.launch();
   fileName = fileName.endsWith('.pdf')
     ? fileName.replace('.pdf', '')
     : fileName;
@@ -64,21 +64,23 @@ Options:
       <script
         src='https://code.jquery.com/jquery-3.5.1.min.js'
         type='text/javascript'
-        async
-      />
+      ></script>
       <script
         src='https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js'
         type='text/javascript'
-        async
-      />
-      <script src="https://gist.githubusercontent.com/volkanunsal/4f6a0e1d52f871b970feb7c0326872ab/raw/331a7625f6f234f413f05729a7a10d5b3307d020/toc.js" async></script>
+      ></script>
+      <script type='text/javascript' src="https://cdn.jsdelivr.net/gh/volkanunsal/doku@master/toc.js"></script>
       <script type='text/javascript'>
-        (() => {
-          tableOfContents('#toc', '#toc', { levels: 'h1, h2, h3, h4' });
-        })();
+        let counter = 1;
+        window.addEventListener('zero-md-rendered', () => {
+          if(counter === ${entries.length}) {
+            tableOfContents('#toc', '#toc', { levels: 'h1, h2, h3, h4' });
+          }
+          counter = counter + 1;
+        });
       </script>
 
-      <script type="module" src="https://cdn.jsdelivr.net/npm/zero-md@next/dist/zero-md.min.js" async></script>
+      <script type="module" src="https://cdn.jsdelivr.net/npm/zero-md@next/dist/zero-md.min.js"></script>
     </head>
     <body>
       <div className='top'>
