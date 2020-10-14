@@ -45,10 +45,7 @@ doku
 
 ## TODO
 
-1. Render images
-1. Generate table of contents
 1. Handle globs 
-1. Generate HTML
 
 
 
