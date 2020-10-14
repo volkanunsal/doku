@@ -9,7 +9,13 @@ const argv0 = require('minimist');
 
 const main = async () => {
   const argv = argv0(process.argv.slice(2));
-  let { path = '*.md', fileName = 'file', config = 'doku.json', help } = argv;
+  let {
+    path = '*.md',
+    fileName = 'file',
+    config = 'doku.json',
+    help,
+    dev,
+  } = argv;
   if (help) {
     console.log(`DOKU
 
@@ -17,12 +23,13 @@ Options:
     --fileName [file]     -- name of the output file
     --config [doku.json]  -- configuration file
     --path [*.md]         -- glob
+    --dev  [false]        -- launch a browser 
 `);
     return;
   }
   const fileServerUrl = 'http://localhost:9999/';
-
-  const browser = await puppeteer.launch();
+  const headless = !dev || dev !== 'true';
+  const browser = await puppeteer.launch({ headless });
   fileName = fileName.endsWith('.pdf')
     ? fileName.replace('.pdf', '')
     : fileName;
@@ -105,31 +112,34 @@ ${entries
   });
   app.listen(9999);
 
-  try {
-    await page.goto(fileServerUrl, { waitUntil: 'networkidle2' });
+  await page.goto(fileServerUrl, { waitUntil: 'networkidle2' });
 
-    await page.pdf({
-      path: `./${fileName}.pdf`,
-      headerTemplate: '<div></div>',
-      footerTemplate:
-        "<div style='width: 100%; text-align: right; font-size: 10px; color: #333; padding-right: 30px;'><span class='pageNumber'></span></div>",
-      displayHeaderFooter: true,
+  if (dev) {
+  } else {
+    console.log('Please wait...');
+    try {
+      await page.pdf({
+        path: `./${fileName}.pdf`,
+        headerTemplate: '<div></div>',
+        footerTemplate:
+          "<div style='width: 100%; text-align: right; font-size: 10px; color: #333; padding-right: 30px;'><span class='pageNumber'></span></div>",
+        displayHeaderFooter: true,
 
-      format: 'A4',
-      margin: {
-        bottom: 70,
-        left: 10,
-        right: 10,
-        top: 70,
-      },
-    });
-  } catch (error) {
-    console.log(error);
+        format: 'A4',
+        margin: {
+          bottom: 70,
+          left: 10,
+          right: 10,
+          top: 70,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+    console.log('PDF file created:', fileName + '.pdf');
+    await browser.close();
+    process.exit(1);
   }
-
-  console.log('PDF file created:', fileName + '.pdf');
-  await browser.close();
-  process.exit(1);
 };
 
 module.exports.main = main;
