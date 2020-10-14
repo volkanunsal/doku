@@ -45,8 +45,6 @@ Options:
     entries = await fg([path]);
   }
 
-  // FIXME: table of contents not showing up.
-
   app.use(
     '/',
     express.static(process.cwd() + '/', {
