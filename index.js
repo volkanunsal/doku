@@ -5,9 +5,19 @@ const fg = require('fast-glob');
 const argv0 = require('minimist');
 
 const main = async () => {
-  const browser = await puppeteer.launch({ headless: true });
   const argv = argv0(process.argv.slice(2));
-  let { path = '*.md', fileName = 'file', config = 'doku.json' } = argv;
+  let { path = '*.md', fileName = 'file', config = 'doku.json', help } = argv;
+  if (help) {
+    console.log(`DOKU
+
+Options:
+    --fileName [file]     -- name of the output file
+    --config [doku.json]  -- configuration file
+    --path [*.md]         -- glob
+`);
+    return;
+  }
+  const browser = await puppeteer.launch({ headless: true });
   fileName = fileName.endsWith('.pdf')
     ? fileName.replace('.pdf', '')
     : fileName;
