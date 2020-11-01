@@ -187,7 +187,7 @@ ${entries
     }
 
     console.log(chalk.green('Success! ') + 'PDF file created');
-    console.log(chalk.green('Open now: ') + outputPath);
+    console.log(chalk.green('Open now: ') + outputPath2);
     await browser.close();
     process.exit(1);
   }
