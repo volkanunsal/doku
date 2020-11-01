@@ -1,6 +1,6 @@
 {
   "name": "doku-md",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "Commandline tool that generates a pdf file from markdown files.",
   "main": "index.js",
   "bin": {
@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "publish": "npm publish"
+    "postpublish": "git push origin master"
   },
   "keywords": [
     "pdf",
