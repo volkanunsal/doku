@@ -37,6 +37,7 @@ npm link doku
 --js                  -- path or url to a custom Javascript include
 --puppeteerOptions    -- override default options of puppetter
 --outputDir           -- output directory
+--tocLevels           -- table of content levels. default: 'h1, h2, h3, h4'
 ```
 
 ## Usage

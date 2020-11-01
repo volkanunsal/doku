@@ -27,6 +27,7 @@ Options:
     --js                  -- path or url to a custom Javascript include
     --puppeteerOptions    -- override default options of puppetter
     --outputDir           -- output directory
+    --tocLevels           -- table of content levels. default: 'h1, h2, h3, h4'
 `)
     );
     return;
@@ -45,6 +46,7 @@ Options:
     js,
     puppeteerOptions = '',
     outputDir = './',
+    tocLevels = 'h1, h2, h3, h4',
   } = options;
 
   const fileServerUrl = 'http://localhost:9999/';
@@ -117,7 +119,7 @@ Options:
         let counter = 1;
         window.addEventListener('zero-md-rendered', () => {
           if(counter === ${entries.length}) {
-            tableOfContents('toc', 'toc', { levels: 'h1, h2, h3, h4' });
+            tableOfContents('toc', 'toc', { levels: ${tocLevels} });
             // Dispatch a custom event.
             const event = new Event('doku-rendered');
             window.dispatchEvent(event);
