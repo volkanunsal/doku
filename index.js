@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 const fs = require('fs');
+const nodePath = require('path');
 const puppeteer = require('puppeteer');
 const fg = require('fast-glob');
 const express = require('express');
 const app = express();
 const expand = require('expand-object');
-
+const chalk = require('chalk');
 const argv0 = require('minimist');
 
 const main = async () => {
@@ -15,6 +16,7 @@ const main = async () => {
     fileName = 'file',
     config = 'doku.json',
     help,
+    h,
     dev,
     css,
     js,
@@ -22,8 +24,9 @@ const main = async () => {
     outputDir = './',
   } = argv;
 
-  if (help) {
-    console.log(`DOKU
+  if (help || h) {
+    console.log(
+      chalk.yellow(`DOKU
 
 Options:
     --fileName [file]     -- name of the output file
@@ -34,7 +37,8 @@ Options:
     --js                  -- path or url to a custom Javascript include
     --puppeteerOptions    -- override default options of puppetter
     --outputDir           -- output directory
-`);
+`)
+    );
     return;
   }
   const fileServerUrl = 'http://localhost:9999/';
@@ -52,11 +56,19 @@ Options:
     const configFile = JSON.parse(fs.readFileSync(config, 'utf8'));
     entries = configFile.files;
   } else if (path) {
-    entries = await fg([path]);
+    if (fs.existsSync(path)) {
+      console.error(
+        chalk.red('Error: ') +
+          'You have specified a file, not a glob. Try surrounding your glob with quotation marks.'
+      );
+      process.exit(1);
+    } else {
+      entries = await fg([path]);
+    }
   }
 
   if (entries.length === 0) {
-    console.error('No files were found.');
+    console.error(chalk.red('Error: ') + 'No files were found.');
     process.exit(1);
   }
 
@@ -140,15 +152,16 @@ ${entries
       process.exit(1);
     });
   } else {
-    console.log('Please wait...');
+    console.log(chalk.yellow('Please wait...'));
 
     // Expand options into an object
     puppeteerOptions = expand(puppeteerOptions);
+    const outputPath = nodePath.resolve(`${outputDir}/${fileName}.pdf`);
 
     try {
       await page.pdf({
         printBackground: true,
-        path: `${outputDir}/${fileName}.pdf`,
+        path: outputPath,
         headerTemplate: '<div></div>',
         footerTemplate:
           "<div style='width: 100%; text-align: right; font-size: 10px; color: #333; padding-right: 30px;'><span class='pageNumber'></span></div>",
@@ -165,7 +178,9 @@ ${entries
     } catch (error) {
       console.log(error);
     }
-    console.log('PDF file created:', fileName + '.pdf');
+
+    console.log(chalk.green('Success! ') + 'PDF file created');
+    console.log(chalk.green('Open now: ') + outputPath);
     await browser.close();
     process.exit(1);
   }

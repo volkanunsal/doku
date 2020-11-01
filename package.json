@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "chalk": "4.1.0",
     "expand-object": "0.4.2",
     "express": "^4.17.1",
     "fast-glob": "^3.2.4",
