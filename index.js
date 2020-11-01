@@ -4,18 +4,24 @@ const puppeteer = require('puppeteer');
 const fg = require('fast-glob');
 const express = require('express');
 const app = express();
+const expand = require('expand-object');
 
 const argv0 = require('minimist');
 
 const main = async () => {
   const argv = argv0(process.argv.slice(2));
   let {
-    path = '*.md',
+    path,
     fileName = 'file',
     config = 'doku.json',
     help,
     dev,
+    css,
+    js,
+    puppeteerOptions = '',
+    outputDir = './',
   } = argv;
+
   if (help) {
     console.log(`DOKU
 
@@ -23,12 +29,17 @@ Options:
     --fileName [file]     -- name of the output file
     --config [doku.json]  -- configuration file
     --path [*.md]         -- glob
-    --dev  [false]        -- launch a browser 
+    --dev  [false]        -- launch a browser
+    --css                 -- path or url to a custom stylesheet
+    --js                  -- path or url to a custom Javascript include
+    --puppeteerOptions    -- override default options of puppetter
+    --outputDir           -- output directory
 `);
     return;
   }
   const fileServerUrl = 'http://localhost:9999/';
-  const headless = !dev || dev !== 'true';
+  const headless = !dev || (dev !== 'true' && dev !== true);
+
   const browser = await puppeteer.launch({ headless });
   fileName = fileName.endsWith('.pdf')
     ? fileName.replace('.pdf', '')
@@ -41,8 +52,12 @@ Options:
     const configFile = JSON.parse(fs.readFileSync(config, 'utf8'));
     entries = configFile.files;
   } else if (path) {
-    // FIXME: glob only fetches a single entry.
     entries = await fg([path]);
+  }
+
+  if (entries.length === 0) {
+    console.error('No files were found.');
+    process.exit(1);
   }
 
   app.use(
@@ -53,6 +68,14 @@ Options:
       },
     })
   );
+
+  let customStyles = '';
+  if (css)
+    customStyles = `<link rel="stylesheet" type="text/css" href="${css}">`;
+
+  let customScripts = '';
+  if (js)
+    customScripts = `<script src="${js}" type="text/javascript" charset="utf-8" ></script>`;
 
   const html = `
   <!DOCTYPE html>
@@ -79,28 +102,28 @@ Options:
         let counter = 1;
         window.addEventListener('zero-md-rendered', () => {
           if(counter === ${entries.length}) {
-            tableOfContents('#toc', '#toc', { levels: 'h1, h2, h3, h4' });
+            tableOfContents('toc', 'toc', { levels: 'h1, h2, h3, h4' });
+            // Dispatch a custom event.
+            const event = new Event('doku-rendered');
+            window.dispatchEvent(event);
           }
           counter = counter + 1;
         });
       </script>
-
       <script type="module" src="https://cdn.jsdelivr.net/npm/zero-md@next/dist/zero-md.min.js"></script>
+      ${customStyles}
+      ${customScripts}
     </head>
     <body>
-      <div className='top'>
-        <main className='container'>
-          <div className='row'>
-            <article className='col-lg-12'>
-            <aside id='toc'>
+      <main className='container'>
+        <div className='row'>
+          <article className='col-lg-12'>
 ${entries
   .map((v) => `<zero-md no-shadow src="${fileServerUrl}${v}"></zero-md>`)
   .join('')}
-            </aside>
-            </article>
-          </div>
-        </main>
-      </div>
+          </article>
+        </div>
+      </main>
     </body>
   </html>
 `;
@@ -113,16 +136,23 @@ ${entries
   await page.goto(fileServerUrl, { waitUntil: 'networkidle2' });
 
   if (dev) {
+    browser.on('disconnected', () => {
+      process.exit(1);
+    });
   } else {
     console.log('Please wait...');
+
+    // Expand options into an object
+    puppeteerOptions = expand(puppeteerOptions);
+
     try {
       await page.pdf({
-        path: `./${fileName}.pdf`,
+        printBackground: true,
+        path: `${outputDir}/${fileName}.pdf`,
         headerTemplate: '<div></div>',
         footerTemplate:
           "<div style='width: 100%; text-align: right; font-size: 10px; color: #333; padding-right: 30px;'><span class='pageNumber'></span></div>",
         displayHeaderFooter: true,
-
         format: 'A4',
         margin: {
           bottom: 70,
@@ -130,6 +160,7 @@ ${entries
           right: 10,
           top: 70,
         },
+        ...puppeteerOptions,
       });
     } catch (error) {
       console.log(error);
