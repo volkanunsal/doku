@@ -21,13 +21,14 @@ const main = async () => {
 Options:
     --fileName [file]     -- name of the output file
     --config [doku.json]  -- configuration file
-    --path [*.md]         -- glob
+    --glob [*.md]         -- glob
     --dev  [false]        -- launch a browser
     --css                 -- path or url to a custom stylesheet
     --js                  -- path or url to a custom Javascript include
     --puppeteerOptions    -- override default options of puppetter
     --outputDir           -- output directory
     --tocLevels           -- table of content levels. default: 'h1, h2, h3, h4'
+    --outputPath          -- output path (supersedes other output options)
 `)
     );
     return;
@@ -39,7 +40,7 @@ Options:
   }
 
   let {
-    path,
+    glob,
     fileName = 'file',
     dev,
     css,
@@ -47,6 +48,8 @@ Options:
     puppeteerOptions = '',
     outputDir = './',
     tocLevels = 'h1, h2, h3, h4',
+    outputPath,
+    entries = [],
   } = options;
 
   const fileServerUrl = 'http://localhost:9999/';
@@ -58,17 +61,15 @@ Options:
     : fileName;
   const page = await browser.newPage();
 
-  let entries = [];
-
-  if (path) {
-    if (fs.existsSync(path)) {
+  if (glob) {
+    if (fs.existsSync(glob)) {
       console.error(
         chalk.red('Error: ') +
           'You have specified a file, not a glob. Try surrounding your glob with quotation marks.'
       );
       process.exit(1);
     } else {
-      entries = await fg([path]);
+      entries = await fg([glob]);
     }
   }
 
@@ -161,12 +162,13 @@ ${entries
 
     // Expand options into an object
     puppeteerOptions = expand(puppeteerOptions);
-    const outputPath = nodePath.resolve(`${outputDir}/${fileName}.pdf`);
+    let outputPath1 = outputPath || `${outputDir}/${fileName}.pdf`;
+    const outputPath2 = nodePath.resolve(outputPath1);
 
     try {
       await page.pdf({
         printBackground: true,
-        path: outputPath,
+        path: outputPath2,
         headerTemplate: '<div></div>',
         footerTemplate:
           "<div style='width: 100%; text-align: right; font-size: 10px; color: #333; padding-right: 30px;'><span class='pageNumber'></span></div>",

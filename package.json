@@ -1,9 +1,11 @@
 {
-  "name": "doku",
+  "name": "doku-md",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "bin": "index.js",
+  "bin": {
+    "doku": "index.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
