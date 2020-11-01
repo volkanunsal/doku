@@ -1,6 +1,6 @@
 # doku
 
-Commandline tool to generate pdf from markdown.
+Commandline tool to generate a PDF file from markdown input.
 
 ```
        __      __
@@ -24,6 +24,19 @@ npm link
 
 cd yourproject
 npm link doku
+```
+
+## Options
+
+```
+--fileName [file]     -- name of the output file
+--config [doku.json]  -- configuration file
+--path [*.md]         -- glob
+--dev  [false]        -- launch a browser
+--css                 -- path or url to a custom stylesheet
+--js                  -- path or url to a custom Javascript include
+--puppeteerOptions    -- override default options of puppetter
+--outputDir           -- output directory
 ```
 
 ## Usage
