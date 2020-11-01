@@ -1,7 +1,7 @@
 {
   "name": "doku-md",
   "version": "1.0.1",
-  "description": "",
+  "description": "Commandline tool that generates a pdf file from markdown files.",
   "main": "index.js",
   "bin": {
     "doku": "index.js"
@@ -9,8 +9,17 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "pdf",
+    "bootstrap",
+    "javascript",
+    "documentation",
+    "table-of-contents",
+    "puppeteer",
+    "markdown"
+  ],
+  "author": "Volkan Unsal",
+  "license": "MIT",
   "dependencies": {
     "chalk": "4.1.0",
     "express": "^4.17.1",
