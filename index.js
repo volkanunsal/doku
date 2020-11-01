@@ -11,18 +11,8 @@ const argv0 = require('minimist');
 
 const main = async () => {
   const argv = argv0(process.argv.slice(2));
-  let {
-    path,
-    fileName = 'file',
-    config = 'doku.json',
-    help,
-    h,
-    dev,
-    css,
-    js,
-    puppeteerOptions = '',
-    outputDir = './',
-  } = argv;
+  let options = argv;
+  let { config = 'doku.json', help, h } = options;
 
   if (help || h) {
     console.log(
@@ -41,6 +31,22 @@ Options:
     );
     return;
   }
+
+  if (config && fs.existsSync(config)) {
+    const configFile = JSON.parse(fs.readFileSync(config, 'utf8'));
+    options = { ...options, ...configFile };
+  }
+
+  let {
+    path,
+    fileName = 'file',
+    dev,
+    css,
+    js,
+    puppeteerOptions = '',
+    outputDir = './',
+  } = options;
+
   const fileServerUrl = 'http://localhost:9999/';
   const headless = !dev || (dev !== 'true' && dev !== true);
 
@@ -48,14 +54,11 @@ Options:
   fileName = fileName.endsWith('.pdf')
     ? fileName.replace('.pdf', '')
     : fileName;
-
   const page = await browser.newPage();
 
   let entries = [];
-  if (config && fs.existsSync(config)) {
-    const configFile = JSON.parse(fs.readFileSync(config, 'utf8'));
-    entries = configFile.files;
-  } else if (path) {
+
+  if (path) {
     if (fs.existsSync(path)) {
       console.error(
         chalk.red('Error: ') +
