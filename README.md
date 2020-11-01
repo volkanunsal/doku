@@ -111,7 +111,9 @@ window.addEventListener(`doku-rendered`, () => { ... })
 
 ### Extending Markdown renderer
 
-Under the hood, `doku` uses the [`marked`](https://github.com/markedjs/marked) Markdown renderer. The renderer will be available at `window.marked` property. Check out [the "how-to" page of marked](https://marked.js.org/using_pro) to get a better sense of how to extend the renderer.
+To extend the [`marked`](https://github.com/markedjs/marked) renderer, you can provide your extensions in the Javascript file. The renderer will be available at `window.marked` property.
+
+Check out [the "how-to" page of marked](https://marked.js.org/using_pro) to get a better sense of how to extend the renderer.
 
 ### Customizing Puppeteer
 
