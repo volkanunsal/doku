@@ -6,12 +6,12 @@ Commandline to to generate a pdf file from markdown files.
 
 ## Features
 
-- ✅ - table of contents: doku can automatically generate a table of contents for you.
-- ✅ - customizable via css
-- ✅ - customizable via Javascript
-- ✅ - extensible Markdown renderer
-- ✅ - full power of Puppeteer for pdf rendering
-- ✅ - simple and easy to use from commandline
+- table of contents: doku can automatically generate a table of contents for you.
+- customizable via css
+- customizable via Javascript
+- extensible Markdown renderer
+- full power of Puppeteer for pdf rendering
+- simple and easy to use from commandline
 
 ```
        __      __
@@ -108,3 +108,11 @@ In your file, you can use jQuery. To ensure that the page is completely rendered
 ```js
 window.addEventListener(`doku-rendered`, () => { ... })
 ```
+
+### Extending Markdown renderer
+
+Under the hood, `doku` uses the [`marked`](https://github.com/markedjs/marked) Markdown renderer. The renderer will be available at `window.marked` property. Check out [the "how-to" page of marked](https://marked.js.org/using_pro) to get a better sense of how to extend the renderer.
+
+### Customizing Puppeteer
+
+If you want more control over your PDF, including customization for header and footer templates, you can pass `puppeteerOptions` to `doku` to override any of the defaults.
