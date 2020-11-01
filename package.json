@@ -1,6 +1,6 @@
 {
   "name": "doku-md",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Commandline tool that generates a pdf file from markdown files.",
   "main": "index.js",
   "bin": {

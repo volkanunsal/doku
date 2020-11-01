@@ -6,12 +6,12 @@
 
 ## Features
 
-- table of contents: doku can automatically generate a table of contents for you.
-- customizable via css
-- customizable via Javascript
-- extensible Markdown renderer
-- full power of Puppeteer for pdf rendering
-- simple and easy to use from commandline
+- Automatically generated table of contents
+- Customizable via css
+- Customizable via Javascript
+- Extensible Markdown renderer
+- Full power of Puppeteer for pdf rendering
+- Simple and easy commandline tool
 
 ```
        __      __
