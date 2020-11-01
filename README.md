@@ -6,12 +6,12 @@ Commandline to to generate a pdf file from markdown files.
 
 ## Features
 
-- ✅ table of contents: doku can automatically generate a table of contents for you.
-- ✅ customizable via css
-- ✅ customizable via Javascript
-- ✅ extensible Markdown renderer
-- ✅ full power of Puppeteer for pdf rendering
-- ✅ simple and easy to use from commandline
+- ✅ - table of contents: doku can automatically generate a table of contents for you.
+- ✅ - customizable via css
+- ✅ - customizable via Javascript
+- ✅ - extensible Markdown renderer
+- ✅ - full power of Puppeteer for pdf rendering
+- ✅ - simple and easy to use from commandline
 
 ```
        __      __
