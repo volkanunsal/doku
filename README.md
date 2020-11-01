@@ -1,5 +1,7 @@
 # doku
 
+[![npm version](https://badge.fury.io/js/doku-md.svg)](https://badge.fury.io/js/doku-md)
+
 Commandline to to generate a pdf file from markdown files.
 
 `doku` is designed to make the process of building downloadable PDFs from markdown files.
