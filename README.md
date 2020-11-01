@@ -2,7 +2,7 @@
 
 [![npm version](https://badge.fury.io/js/doku-md.svg)](https://badge.fury.io/js/doku-md)
 
-`doku` is designed to make the process of building downloadable PDFs from markdown files simple and easy.
+Doku is designed to make the process of building downloadable PDFs from markdown files simple and easy.
 
 ## Features
 
