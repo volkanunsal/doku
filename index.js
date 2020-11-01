@@ -5,7 +5,7 @@ const puppeteer = require('puppeteer');
 const fg = require('fast-glob');
 const express = require('express');
 const app = express();
-const expand = require('expand-object');
+const expand = require('./expand');
 const chalk = require('chalk');
 const argv0 = require('minimist');
 

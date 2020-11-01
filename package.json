@@ -1,6 +1,6 @@
 {
   "name": "doku-md",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "index.js",
   "bin": {
@@ -13,10 +13,10 @@
   "license": "ISC",
   "dependencies": {
     "chalk": "4.1.0",
-    "expand-object": "0.4.2",
     "express": "^4.17.1",
     "fast-glob": "^3.2.4",
     "minimist": "^1.2.5",
-    "puppeteer": "^5.3.1"
+    "puppeteer": "^5.3.1",
+    "set-value": "3.0.2"
   }
 }
